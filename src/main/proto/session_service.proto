@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package ru.weber.auth.service.service.grpc;
+
+import "google/protobuf/empty.proto";
+
+option java_generic_services = true;
+
+message GetSessionRequest {
+  string token = 1;
+}
+
+message SetSessionInvalidRequest {
+  string token = 1;
+}
+
+message GetSessionResponse {
+  map<string, string> meta_info = 1;
+}
+
+service SessionService {
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+  rpc InvalidateSession(SetSessionInvalidRequest) returns (google.protobuf.Empty);
+}

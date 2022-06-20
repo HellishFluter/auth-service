@@ -1,0 +1,33 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:14.1-alpine
+    hostname: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "auth_service"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+
+  auth-service:
+    image: auth-service:0.0.1
+    build:
+      context: .
+    container_name: auth-service
+    environment:
+      POSTGRESQL_JDBC_DRIVER: org.postgresql.Driver
+      POSTGRESQL_JDBC_URL: jdbc:postgresql://postgres:5432/auth_service
+      POSTGRESQL_JDBC_USERNAME: postgres
+      POSTGRESQL_JDBC_PASSWORD: postgres
+      HIBERNATE_DDL_AUTO: validate
+      HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:
